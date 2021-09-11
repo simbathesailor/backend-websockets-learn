@@ -92,12 +92,15 @@
 		"passport": "^0.4.0",
 		"passport-http-bearer": "^1.0.1",
 		"passport-jwt": "4.0.0",
+		"pg": "^8.7.1",
+		"pg-hstore": "^2.3.4",
 		"pm2": "^5.1.0",
 		"prettier": "^2.4.0",
 		"pug": "^3.0.1",
 		"sequelize": "^6.6.5",
 		"uuid": "^3.1.0",
-		"winston": "^3.1.0"
+		"winston": "^3.1.0",
+		"ws": "^8.2.2"
 	},
 	"devDependencies": {
 		"apidoc": "^0.28.1",

@@ -6,7 +6,7 @@ const RefreshToken = require('../models/refreshToken.model');
 const PasswordResetToken = require('../models/passwordResetToken.model');
 const { jwtExpirationInterval } = require('../../config/vars');
 const APIError = require('../errors/api-error');
-const emailProvider = require('../services/emails/emailProvider');
+// const emailProvider = require('../services/emails/emailProvider');
 
 /**
  * Returns a formated object with tokens
@@ -99,7 +99,7 @@ exports.sendPasswordReset = async (req, res, next) => {
 
 		if (user) {
 			const passwordResetObj = await PasswordResetToken.generate(user);
-			emailProvider.sendPasswordReset(passwordResetObj);
+			//	emailProvider.sendPasswordReset(passwordResetObj);
 			res.status(httpStatus.OK);
 			return res.json('success');
 		}
@@ -136,7 +136,7 @@ exports.resetPassword = async (req, res, next) => {
 		const user = await User.findOne({ email: resetTokenObject.userEmail }).exec();
 		user.password = password;
 		await user.save();
-		emailProvider.sendPasswordChangeEmail(user);
+		// emailProvider.sendPasswordChangeEmail(user);
 
 		res.status(httpStatus.OK);
 		return res.json('Password Updated');
