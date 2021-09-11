@@ -25,6 +25,11 @@ const refreshTokenSchema = new mongoose.Schema({
 	expires: { type: Date },
 });
 
+/**
+ * @typedef RefreshToken
+ */
+const RefreshToken = mongoose.model('RefreshToken', refreshTokenSchema);
+
 refreshTokenSchema.statics = {
 	/**
 	 * Generate a refresh token object and saves it into the database
@@ -48,8 +53,4 @@ refreshTokenSchema.statics = {
 	},
 };
 
-/**
- * @typedef RefreshToken
- */
-const RefreshToken = mongoose.model('RefreshToken', refreshTokenSchema);
 module.exports = RefreshToken;

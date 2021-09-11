@@ -9,7 +9,7 @@ const mongoose = require('./config/mongoose');
 mongoose.connect();
 
 // listen to requests
-app.listen(port, () => logger.info(`server started on port ${port} (${env})`));
+app.listen(port, () => logger.info(`1server started on port ${port} (${env})`));
 
 /**
  * Exports express

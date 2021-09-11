@@ -1,4 +1,4 @@
-// eslint-disable
+/* eslint-disable import/no-mutable-exports */
 import { Sequelize } from 'sequelize';
 // import User from 'User/user.model'
 

@@ -1,4 +1,7 @@
 /* eslint-disable arrow-body-style */
+/* eslint-disable jest/valid-expect */
+/* eslint-disable jest/valid-describe */
+
 /* eslint-disable no-unused-expressions */
 const request = require('supertest');
 const httpStatus = require('http-status');

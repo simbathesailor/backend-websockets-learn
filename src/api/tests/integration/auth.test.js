@@ -1,4 +1,5 @@
 /* eslint-disable arrow-body-style */
+/* eslint-disable jest/valid-expect */
 const request = require('supertest');
 const httpStatus = require('http-status');
 const { expect } = require('chai');

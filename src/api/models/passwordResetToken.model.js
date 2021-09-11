@@ -25,6 +25,11 @@ const passwordResetTokenSchema = new mongoose.Schema({
 	expires: { type: Date },
 });
 
+/**
+ * @typedef RefreshToken
+ */
+const PasswordResetToken = mongoose.model('PasswordResetToken', passwordResetTokenSchema);
+
 passwordResetTokenSchema.statics = {
 	/**
 	 * Generate a reset token object and saves it into the database
@@ -48,8 +53,4 @@ passwordResetTokenSchema.statics = {
 	},
 };
 
-/**
- * @typedef RefreshToken
- */
-const PasswordResetToken = mongoose.model('PasswordResetToken', passwordResetTokenSchema);
 module.exports = PasswordResetToken;
