@@ -10,7 +10,8 @@ const Review = {
 			primaryKey: true,
 		},
 		rating: {
-			type: DataTypes.ENUM(0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5),
+			type: DataTypes.ENUM,
+			values: ['0', '0.5', '1', ' 1.5', '2', '2.5', '3', '3.5', '4', '4.5', '5'],
 		},
 		comment: {
 			type: DataTypes.STRING(1024),
