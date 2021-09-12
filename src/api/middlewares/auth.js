@@ -6,13 +6,14 @@ const jwt = require('jsonwebtoken');
  *
  * @var {[type]}
  */
-const PUBLIC_URLS = ['/v1/users/login'];
+const PUBLIC_URLS = ['/v1/auth/login'];
 
 function getAuthMiddleware() {
 	return (req, res, next) => {
 		// req.wss = wss;
 
 		const isPublicURL = PUBLIC_URLS.indexOf(req.url) !== -1;
+		console.log('🚀 ~ file: auth.js ~ line 16 ~ return ~ isPublicURL', isPublicURL);
 
 		if (isPublicURL) {
 			return next();

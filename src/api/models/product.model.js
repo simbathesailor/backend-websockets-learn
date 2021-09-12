@@ -13,11 +13,13 @@ const Product = {
 			type: DataTypes.STRING(1024),
 		},
 		totalrating: {
-			type: DataTypes.ENUM,
-			values: ['0', '0.5', '1', '1.5', '2', '2.5', '3', '3.5', '4', '4.5', '5'],
+			type: DataTypes.BIGINT,
 		},
 		description: {
 			type: DataTypes.STRING(1024),
+		},
+		count_reviews: {
+			type: DataTypes.BIGINT,
 		},
 	},
 	options: {
