@@ -15,8 +15,8 @@ async function startServer() {
 	try {
 		await dbConnection.authenticate();
 
-		// await ProductModel.sync({ force: true });
-		// await ReviewModel.sync({ force: true });
+		await ProductModel.sync({ force: true });
+		await ReviewModel.sync({ force: true });
 		// await UserSessionModel.sync({ force: true });
 		app.listen(port, () => logger.info(`server started on port ${port} (${env})`));
 	} catch (e) {

@@ -14,6 +14,7 @@ const { logs } = require('./vars');
 const error = require('../api/middlewares/error');
 const { addWebSocketContext } = require('../api/middlewares/websocketcontext');
 const { addDatasources } = require('../api/middlewares/datasources');
+const { getAuthMiddleware } = require('../api/middlewares/auth');
 
 /**
  * Express instance
@@ -61,6 +62,8 @@ app.use(
 );
 
 app.use(addDatasources());
+
+app.use(getAuthMiddleware());
 
 wss.on('connection', function connection(ws) {
 	ws.on('message', function incoming(message) {

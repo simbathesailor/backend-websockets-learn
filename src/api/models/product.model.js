@@ -14,7 +14,7 @@ const Product = {
 		},
 		totalrating: {
 			type: DataTypes.ENUM,
-			values: ['0', '0.5', '1', ' 1.5', '2', '2.5', '3', '3.5', '4', '4.5', '5'],
+			values: ['0', '0.5', '1', '1.5', '2', '2.5', '3', '3.5', '4', '4.5', '5'],
 		},
 		description: {
 			type: DataTypes.STRING(1024),

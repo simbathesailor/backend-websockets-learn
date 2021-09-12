@@ -16,7 +16,7 @@ exports.login = async (req, res, next) => {
 		},
 		process.env.JWT_SECRET,
 		{
-			expiresIn: '30 days',
+			expiresIn: '180 days',
 		},
 	);
 	// console.log('🚀 ~ file: user.controller.js ~ line 19 ~ exports.login= ~ string', req.wss);
