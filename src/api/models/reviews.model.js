@@ -22,7 +22,7 @@ const Review = {
 	},
 	options: {
 		freezeTableName: true,
-		table_name: 'review',
+		tableName: 'review',
 	},
 };
 

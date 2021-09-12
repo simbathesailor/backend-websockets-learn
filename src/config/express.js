@@ -12,6 +12,8 @@ const routes = require('../api/routes/v1');
 const { logs } = require('./vars');
 // const strategies = require('./passport');
 const error = require('../api/middlewares/error');
+const { addWebSocketContext } = require('../api/middlewares/websocketcontext');
+const { addDatasources } = require('../api/middlewares/datasources');
 
 /**
  * Express instance
@@ -45,13 +47,20 @@ app.use(cors());
 // passport.use('facebook', strategies.facebook);
 // passport.use('google', strategies.google);
 
-// logic for websocket
-
 const server = http.createServer(app);
 
 const wss = new WebSocket.Server({
 	server,
+	path: '/live-updates',
 });
+
+app.use(
+	addWebSocketContext({
+		wss,
+	}),
+);
+
+app.use(addDatasources());
 
 wss.on('connection', function connection(ws) {
 	ws.on('message', function incoming(message) {

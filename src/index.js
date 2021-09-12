@@ -5,23 +5,23 @@ const logger = require('./config/logger');
 const app = require('./config/express');
 const ProductModel = require('./api/models/product.model');
 const ReviewModel = require('./api/models/reviews.model');
-
-//const mongoose = require('./config/mongoose');
+const UserSessionModel = require('./api/models/user.model');
 
 const { dbConnection } = require('./config/sequelize');
-
-// open mongoose connection
-
-// mongoose.connect();
 
 // listen to requests
 
 async function startServer() {
-	await dbConnection.authenticate();
+	try {
+		await dbConnection.authenticate();
 
-	//await ProductModel.sync({ force: true });
-	await ReviewModel.sync({ force: true });
-	app.listen(port, () => logger.info(`server started on port ${port} (${env})`));
+		// await ProductModel.sync({ force: true });
+		// await ReviewModel.sync({ force: true });
+		// await UserSessionModel.sync({ force: true });
+		app.listen(port, () => logger.info(`server started on port ${port} (${env})`));
+	} catch (e) {
+		console.log('🚀 ~ file: index.js ~ line 30 ~ startServer ~ e', e);
+	}
 }
 
 startServer();

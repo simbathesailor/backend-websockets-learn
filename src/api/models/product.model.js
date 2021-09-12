@@ -22,7 +22,7 @@ const Product = {
 	},
 	options: {
 		freezeTableName: true,
-		table_name: 'product',
+		tableName: 'product',
 	},
 };
 
