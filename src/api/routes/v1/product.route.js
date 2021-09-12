@@ -3,7 +3,9 @@ const controller = require('../../controllers/product.controller');
 
 const router = express.Router();
 
-router.route('/info').get(controller.getProducts);
+router.route('/all').get(controller.getProducts);
+
+router.route('/info/:productId').get(controller.getProductInfo);
 
 router.route('/review').get(controller.getProductReview);
 
