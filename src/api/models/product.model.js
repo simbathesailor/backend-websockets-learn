@@ -12,14 +12,8 @@ const Product = {
 		title: {
 			type: DataTypes.STRING(1024),
 		},
-		totalrating: {
-			type: DataTypes.BIGINT,
-		},
 		description: {
 			type: DataTypes.STRING(1024),
-		},
-		count_reviews: {
-			type: DataTypes.BIGINT,
 		},
 	},
 	options: {

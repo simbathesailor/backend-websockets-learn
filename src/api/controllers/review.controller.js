@@ -1,5 +1,7 @@
 const httpStatus = require('http-status');
+const { Op, QueryTypes } = require('sequelize');
 const { v4 } = require('uuid');
+const { dbConnection } = require('../../config/sequelize');
 
 /**
  * Returns jwt token if registration was successful
@@ -12,16 +14,15 @@ exports.submitReview = async (req, res, next) => {
 	const { ReviewModel, ProductModel } = req.models;
 	const { product_id: productId, rating: ratingRaw, review_comment: reviewComment } = req.body;
 
-	const rating = parseFloat(ratingRaw);
 	console.log(
-		'🚀 ~ file: review.controller.js ~ line 14 ~ exports.submitReview= ~ req.body',
-		req.body,
+		'🚀 ~ file: review.controller.js ~ line 14 ~ exports.submitReview= ~ req.rating',
+		typeof ratingRaw,
 	);
 
 	// ReviewModel
 
-	// FInd the product info rating
-	const product = await ProductModel.findOne({ where: { id: productId } });
+	// // FInd the product info rating
+	// const product = await ProductModel.findOne({ where: { id: productId } });
 
 	try {
 		const foundReviewForThisUser = await ReviewModel.findOne({
@@ -30,6 +31,10 @@ exports.submitReview = async (req, res, next) => {
 				product_id: productId,
 			},
 		});
+		// console.log(
+		// 	'🚀 ~ file: review.controller.js ~ line 36 ~ exports.submitReview= ~ foundReviewForThisUser',
+		// 	foundReviewForThisUser,
+		// );
 
 		const objectToBeUpdated = {
 			product_id: productId,
@@ -37,28 +42,40 @@ exports.submitReview = async (req, res, next) => {
 			rating: ratingRaw,
 			comment: reviewComment,
 			user_id: token,
+			// updated_at: new Date().toISOString(),
 		};
+
 		console.log(
 			'🚀 ~ file: review.controller.js ~ line 31 ~ exports.submitReview= ~ objectToBeUpdated',
 			objectToBeUpdated,
 		);
 
-		const totalRatingParsed = parseFloat(product.totalrating);
-		const countReviews = parseFloat(product.count_reviews);
-
-		const ratingForTheIncomingReview = parseFloat(rating);
 		if (!foundReviewForThisUser) {
+			debugger;
+			// objectToBeUpdated.created_at = new Date().toISOString();
+
+			// const insertedReview = await dbConnection.query(
+			// 	` INSERT INTO public.review (id,rating,comment,user_id,product_id,created_at,updated_at) VALUES
+			// 	(  $id,
+			// 		 $rating,
+			// 		 $comment,
+			// 		 $user_id,
+			// 		 $product_id,
+			// 		 $created_at,
+			// 		 $updated_at
+			// 	)
+
+			// 	`,
+			// 	{
+			// 		bind: objectToBeUpdated,
+			// 		type: QueryTypes.INSERT,
+			// 	},
+			// );
+			// console.log(
+			// 	'🚀 ~ file: review.controller.js ~ line 74 ~ exports.submitReview= ~ insertedReview',
+			// 	insertedReview,
+			// );
 			const insertedReview = await ReviewModel.create(objectToBeUpdated);
-
-			if (product) {
-				const newTotalRating = totalRatingParsed + rating;
-				const newCountReview = countReviews + 1;
-
-				await product.update({
-					totalrating: newTotalRating,
-					count_reviews: newCountReview,
-				});
-			}
 
 			return res.status(httpStatus.OK).json({
 				success: true,
@@ -66,23 +83,17 @@ exports.submitReview = async (req, res, next) => {
 			});
 		}
 
-		const existingRating = foundReviewForThisUser.rating;
 		await foundReviewForThisUser.update(objectToBeUpdated);
 
 		// update the totalrating for products also
 
-		const updatedTotalRating =
-			totalRatingParsed - parseFloat(existingRating) + parseFloat(rating);
-		console.log(
-			'🚀 ~ file: review.controller.js ~ line 75 ~ exports.submitReview= ~ updatedTotalRating',
-			updatedTotalRating,
-			typeof updatedTotalRating,
-		);
+		// console.log(
+		// 	'🚀 ~ file: review.controller.js ~ line 75 ~ exports.submitReview= ~ updatedTotalRating',
+		// 	updatedTotalRating,
+		// 	typeof updatedTotalRating,
+		// );
 
-		await product.update({
-			totalrating: totalRatingParsed - parseFloat(existingRating) + parseFloat(rating),
-		});
-
+		debugger;
 		return res.status(httpStatus.OK).json({
 			success: true,
 			message: 'Successfully updated the review',
