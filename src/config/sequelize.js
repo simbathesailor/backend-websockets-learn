@@ -15,13 +15,8 @@ async function TestDbConnection(sequelizeInstance) {
 let dbInstance;
 
 function getDatabaseConnection(callback) {
-	console.log(
-		"🚀 ~ file: server.ts ~ line 28 ~ getDatabaseConnection ~ process.env['DATABASE_URI'",
-		process.env.DATABASE_URI,
-	);
-
 	if (!dbInstance) {
-		dbInstance = new Sequelize(process.env.DATABASE_URI, {
+		dbInstance = new Sequelize(process.env.DATABASE_URL, {
 			logging: (...msg) => {
 				console.log('Database query :\n', msg);
 			},
