@@ -21,9 +21,9 @@ function getDatabaseConnection(callback) {
 			process.env.DATABASE_URL,
 		);
 		dbInstance = new Sequelize(process.env.DATABASE_URL, {
-			ssl: true,
+			ssl: false,
 			dialectOptions: {
-				ssl: true,
+				ssl: false,
 			},
 			logging: (...msg) => {
 				console.log('Database query :\n', msg);
