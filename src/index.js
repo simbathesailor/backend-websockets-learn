@@ -15,6 +15,7 @@ async function startServer() {
 	try {
 		await dbConnection.authenticate();
 
+		console.log('Authentication successfull');
 		// await ProductModel.sync({ force: true });
 		// await ReviewModel.sync({ force: true });
 		// await UserSessionModel.sync({ force: true });
