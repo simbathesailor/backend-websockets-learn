@@ -16,6 +16,9 @@ const { addWebSocketContext } = require('../api/middlewares/websocketcontext');
 const { addDatasources } = require('../api/middlewares/datasources');
 const { getAuthMiddleware } = require('../api/middlewares/auth');
 
+// eslint-disable-next-line
+const BROADCAST_AllOWED_TYPES = ['UPDATE_PRODUCT_LISTING'];
+
 /**
  * Express instance
  * @public
@@ -68,7 +71,26 @@ app.use(getAuthMiddleware());
 wss.on('connection', function connection(ws) {
 	ws.on('message', function incoming(message) {
 		// console.log('received: %s', message);
-		ws.send(`Got your message ===> ${message}`);
+		// ws.send(`Got your message ===> ${message}`);
+
+		try {
+			const parsedMessage = JSON.parse(message);
+			const type = parsedMessage.type;
+
+			const broadCastAllowed = BROADCAST_AllOWED_TYPES.indexOf(type) !== -1;
+
+			if (broadCastAllowed) {
+				wss.clients.forEach(function each(client) {
+					if (client !== ws && client.readyState === WebSocket.OPEN) {
+						client.send(message, {
+							binary: false,
+						});
+					}
+				});
+			}
+		} catch (e) {
+			console.log('Failed to send the socket message');
+		}
 	});
 
 	ws.send('Welcome client');
