@@ -16,6 +16,10 @@ let dbInstance;
 
 function getDatabaseConnection(callback) {
 	if (!dbInstance) {
+		console.log(
+			'🚀 ~ file: sequelize.js ~ line 21 ~ getDatabaseConnection ~ process.env.DATABASE_URL',
+			process.env.DATABASE_URL,
+		);
 		dbInstance = new Sequelize(process.env.DATABASE_URL, {
 			logging: (...msg) => {
 				console.log('Database query :\n', msg);
