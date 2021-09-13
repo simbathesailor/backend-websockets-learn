@@ -1,56 +1,40 @@
 const httpStatus = require('http-status');
-const passport = require('passport');
-const User = require('../models/user.model');
-const APIError = require('../errors/api-error');
+const jwt = require('jsonwebtoken');
 
-const ADMIN = 'admin';
-const LOGGED_USER = '_loggedUser';
+/**
+ * The list of public urls. The check can be more efficient
+ *
+ * @var {[type]}
+ */
+const PUBLIC_URLS = ['/v1/auth/login'];
 
-const handleJWT = (req, res, next, roles) => async (err, user, info) => {
-	const error = err || info;
-	const logIn = Promise.promisify(req.logIn);
-	const apiError = new APIError({
-		message: error ? error.message : 'Unauthorized',
-		status: httpStatus.UNAUTHORIZED,
-		stack: error ? error.stack : undefined,
-	});
+function getAuthMiddleware() {
+	return (req, res, next) => {
+		// req.wss = wss;
 
-	try {
-		if (error || !user) throw error;
-		await logIn(user, { session: false });
-	} catch (e) {
-		return next(apiError);
-	}
+		const isPublicURL = PUBLIC_URLS.indexOf(req.url) !== -1;
+		console.log('🚀 ~ file: auth.js ~ line 16 ~ return ~ isPublicURL', isPublicURL);
 
-	if (roles === LOGGED_USER) {
-		if (user.role !== 'admin' && req.params.userId !== user._id.toString()) {
-			apiError.status = httpStatus.FORBIDDEN;
-			apiError.message = 'Forbidden';
-			return next(apiError);
+		if (isPublicURL) {
+			return next();
 		}
-	} else if (!roles.includes(user.role)) {
-		apiError.status = httpStatus.FORBIDDEN;
-		apiError.message = 'Forbidden';
-		return next(apiError);
-	} else if (err || !user) {
-		return next(apiError);
-	}
 
-	req.user = user;
+		// console.log('Adding websoket server to context');
+		try {
+			const decoded = jwt.verify(req.get('token'), process.env.JWT_SECRET);
+			req.user = {
+				token: req.get('token'),
+				decoded,
+			};
 
-	return next();
-};
+			return next();
+		} catch (e) {
+			return res.status(httpStatus.UNAUTHORIZED).json({
+				success: false,
+				message: 'Token is invalid',
+			});
+		}
+	};
+}
 
-exports.ADMIN = ADMIN;
-exports.LOGGED_USER = LOGGED_USER;
-
-exports.authorize =
-	(roles = User.roles) =>
-	(req, res, next) =>
-		passport.authenticate('jwt', { session: false }, handleJWT(req, res, next, roles))(
-			req,
-			res,
-			next,
-		);
-
-exports.oAuth = service => passport.authenticate(service, { session: false });
+exports.getAuthMiddleware = getAuthMiddleware;

@@ -5,11 +5,19 @@ const compress = require('compression');
 const methodOverride = require('method-override');
 const cors = require('cors');
 const helmet = require('helmet');
-const passport = require('passport');
+const http = require('http');
+const WebSocket = require('ws');
+// const passport = require('passport');
 const routes = require('../api/routes/v1');
 const { logs } = require('./vars');
-const strategies = require('./passport');
+// const strategies = require('./passport');
 const error = require('../api/middlewares/error');
+const { addWebSocketContext } = require('../api/middlewares/websocketcontext');
+const { addDatasources } = require('../api/middlewares/datasources');
+const { getAuthMiddleware } = require('../api/middlewares/auth');
+
+// eslint-disable-next-line
+const BROADCAST_AllOWED_TYPES = ['UPDATE_PRODUCT_LISTING'];
 
 /**
  * Express instance
@@ -38,10 +46,55 @@ app.use(helmet());
 app.use(cors());
 
 // enable authentication
-app.use(passport.initialize());
-passport.use('jwt', strategies.jwt);
-passport.use('facebook', strategies.facebook);
-passport.use('google', strategies.google);
+// app.use(passport.initialize());
+// passport.use('jwt', strategies.jwt);
+// passport.use('facebook', strategies.facebook);
+// passport.use('google', strategies.google);
+
+const server = http.createServer(app);
+
+const wss = new WebSocket.Server({
+	server,
+	path: '/live-updates',
+});
+
+app.use(
+	addWebSocketContext({
+		wss,
+	}),
+);
+
+app.use(addDatasources());
+
+app.use(getAuthMiddleware());
+
+wss.on('connection', function connection(ws) {
+	ws.on('message', function incoming(message) {
+		// console.log('received: %s', message);
+		// ws.send(`Got your message ===> ${message}`);
+
+		try {
+			const parsedMessage = JSON.parse(message);
+			const type = parsedMessage.type;
+
+			const broadCastAllowed = BROADCAST_AllOWED_TYPES.indexOf(type) !== -1;
+
+			if (broadCastAllowed) {
+				wss.clients.forEach(function each(client) {
+					if (client !== ws && client.readyState === WebSocket.OPEN) {
+						client.send(message, {
+							binary: false,
+						});
+					}
+				});
+			}
+		} catch (e) {
+			console.log('Failed to send the socket message');
+		}
+	});
+
+	ws.send('Welcome client');
+});
 
 // mount api v1 routes
 app.use('/v1', routes);
@@ -55,4 +108,4 @@ app.use(error.notFound);
 // error handler, send stacktrace only during development
 app.use(error.handler);
 
-module.exports = app;
+module.exports = server;

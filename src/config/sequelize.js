@@ -1,5 +1,5 @@
 /* eslint-disable import/no-mutable-exports */
-import { Sequelize } from 'sequelize';
+const Sequelize = require('sequelize');
 // import User from 'User/user.model'
 
 async function TestDbConnection(sequelizeInstance) {
@@ -15,13 +15,8 @@ async function TestDbConnection(sequelizeInstance) {
 let dbInstance;
 
 function getDatabaseConnection(callback) {
-	console.log(
-		"🚀 ~ file: server.ts ~ line 28 ~ getDatabaseConnection ~ process.env['DATABASE_URI'",
-		process.env.DATABASE_URI,
-	);
-
 	if (!dbInstance) {
-		dbInstance = new Sequelize(process.env.DATABASE_URI, {
+		dbInstance = new Sequelize(process.env.DATABASE_URL, {
 			logging: (...msg) => {
 				console.log('Database query :\n', msg);
 			},
@@ -50,6 +45,11 @@ function getDatabaseConnection(callback) {
 	return dbInstance;
 }
 
-export { dbInstance };
+function getDbInstance() {
+	return dbInstance;
+}
 
-export default getDatabaseConnection();
+module.exports = {
+	dbConnection: getDatabaseConnection(),
+	getDbInstance,
+};

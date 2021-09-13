@@ -7,7 +7,7 @@
 	"private": false,
 	"license": "MIT",
 	"engines": {
-		"node": ">=8",
+		"node": ">=12",
 		"yarn": "*"
 	},
 	"scripts": {
@@ -15,6 +15,7 @@
 		"prestart": "yarn docs",
 		"start": "cross-env NODE_ENV=production pm2 start ./src/index.js",
 		"dev": "nodemon ./src/index.js",
+		"debug": "nodemon --inspect ./src/index.js ",
 		"lint": "eslint ./src/ --ignore-path .gitignore --ignore-pattern internals/scripts",
 		"lint:fix": "yarn lint --fix",
 		"lint:watch": "yarn lint --watch",
@@ -65,7 +66,7 @@
 	"dependencies": {
 		"axios": "^0.21.1",
 		"babel-eslint": "^10.1.0",
-		"bcryptjs": "2.4.3",
+		"bcryptjs": "^2.4.3",
 		"bluebird": "^3.5.0",
 		"body-parser": "^1.17.0",
 		"compression": "^1.6.2",
@@ -82,6 +83,7 @@
 		"helmet": "^4.6.0",
 		"http-status": "^1.0.1",
 		"joi": "^10.4.1",
+		"jsonwebtoken": "^8.5.1",
 		"jwt-simple": "0.5.6",
 		"lodash": "^4.17.4",
 		"method-override": "^3.0.0",
@@ -92,12 +94,15 @@
 		"passport": "^0.4.0",
 		"passport-http-bearer": "^1.0.1",
 		"passport-jwt": "4.0.0",
+		"pg": "^8.7.1",
+		"pg-hstore": "^2.3.4",
 		"pm2": "^5.1.0",
 		"prettier": "^2.4.0",
 		"pug": "^3.0.1",
 		"sequelize": "^6.6.5",
-		"uuid": "^3.1.0",
-		"winston": "^3.1.0"
+		"uuid": "^8.3.2",
+		"winston": "^3.1.0",
+		"ws": "^8.2.2"
 	},
 	"devDependencies": {
 		"apidoc": "^0.28.1",
