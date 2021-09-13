@@ -20,12 +20,8 @@ function getDatabaseConnection(callback) {
 			'🚀 ~ file: sequelize.js ~ line 21 ~ getDatabaseConnection ~ process.env.DATABASE_URL',
 			process.env.DATABASE_URL,
 		);
-		dbInstance = new Sequelize(process.env.DATABASE_URL, {
-			dialectOptions: {
-				ssl: {
-					rejectUnauthorized: false,
-				},
-			},
+
+		const dbOptions = {
 			logging: (...msg) => {
 				console.log('Database query :\n', msg);
 			},
@@ -34,7 +30,16 @@ function getDatabaseConnection(callback) {
 				freezeTableName: true,
 				timestamps: true,
 			},
-		});
+		};
+
+		if (process.env.NODE_ENV === 'production') {
+			dbOptions.dialectOptions = {
+				ssl: {
+					rejectUnauthorized: false,
+				},
+			};
+		}
+		dbInstance = new Sequelize(process.env.DATABASE_URL, dbOptions);
 	}
 
 	// add a condtion to alter only when it is non production

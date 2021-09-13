@@ -68,10 +68,31 @@ app.use(addDatasources());
 
 app.use(getAuthMiddleware());
 
+function heartbeat() {
+	this.isAlive = true;
+}
+
+const interval = setInterval(function ping() {
+	// eslint-disable-next-line
+	wss.clients.forEach(ws => {
+		if (ws.isAlive === false) return ws.terminate();
+		// eslint-disable-next-line
+		ws.isAlive = false;
+		ws.ping();
+	});
+}, 30000);
+
+wss.on('close', function close() {
+	clearInterval(interval);
+});
+
 wss.on('connection', function connection(ws) {
+	// eslint-disable-next-line
+	ws.isAlive = true;
+	ws.on('pong', heartbeat);
 	ws.on('message', function incoming(message) {
 		// console.log('received: %s', message);
-		// ws.send(`Got your message ===> ${message}`);
+		ws.send(`Got your message ===> ${message}`);
 
 		try {
 			const parsedMessage = JSON.parse(message);
