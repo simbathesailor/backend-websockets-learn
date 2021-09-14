@@ -1,6 +1,6 @@
-# Webockets Backend 🔌 🔌
+# Webockets Backend 📣
 
-## Technologies
+## Technologies 🔌
 
 (Nodejs, ws, heroku, postgres)
 
