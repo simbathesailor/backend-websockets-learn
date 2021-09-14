@@ -15,6 +15,7 @@ async function getallReviewForProduct({ productId, ReviewModel }) {
 				[Op.eq]: productId,
 			},
 		},
+		order: [['updated_at', 'DESC']],
 	});
 
 	return result;
